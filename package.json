@@ -16,8 +16,8 @@
     "express": "^4.17.2",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.1.7",
+    "multer": "*",
     "nodemon": "^2.0.16"
   },
-  "devDependencies": {},
   "description": ""
 }
