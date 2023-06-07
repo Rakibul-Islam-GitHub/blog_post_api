@@ -2,7 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
-
+const multer = require("multer");
+const userRouter = require("./routers/userRouter");
 
 
 
@@ -10,6 +11,7 @@ require("dotenv").config();
 
 //set up server
 const app = express();
+const upload = multer();
 const PORT = process.env.PORT || 3001;
 app.use(express.json());
 
@@ -30,11 +32,16 @@ app.listen(PORT, () => {
 app.use(cors());
 app.use(express.json());
 
-app.use('/', (req, res)=>{
+
+
+//set up routes
+
+app.use('/api/user', upload.none(), userRouter)
+
+
+
+app.get('/', (req, res)=>{
 res.send(
   "App is running!"
 )
 })
-
-//set up routes
-
