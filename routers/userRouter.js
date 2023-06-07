@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 router.post("/register", async (req, res) => {
   try {
     const { email, firstname, lastname, password } = req.body;
-console.log(req.body);
+
     //validation
     if (!email || !firstname || !lastname || !password)
       return res
@@ -44,6 +44,48 @@ console.log(req.body);
     console.error(err);
     //internal server error
     res.status(500).send('Something went wrong!');
+  }
+});
+
+
+//login router
+// api/user/login
+router.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password)
+      return res
+        .status(400)
+        .json({ errorMessage: "Please enter all required fields." });
+
+    const user = await User.findOne({ email: req.body.email });
+    !user && res.status(401).json("Wrong email or does not exist!");
+
+    const hashedPassword = CryptoJS.AES.decrypt(
+      user.password,
+      process.env.PW_SECRET
+    );
+    const originalpassword = hashedPassword.toString(CryptoJS.enc.Utf8);
+
+    originalpassword !== req.body.password &&
+      res.status(401).json("Oops.. Wrong password!");
+
+    //jwt token
+    const token = jwt.sign(
+      {
+        id: user._id,
+        isAdmin: user.isAdmin,
+        email: user.email,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "30d" }
+    );
+
+   
+    res.status(200).json({firstname: user.firstname, lastname: user.lastname, email:user.email, isAdmin: user.isAdmin, token });
+  } catch (err) {
+    res.status(500).json(err);
   }
 });
 
