@@ -4,6 +4,8 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const multer = require("multer");
 const userRouter = require("./routers/userRouter");
+const postRouter = require("./routers/postRouter");
+const fileUpload = require("./utils/fileUpload");
 
 
 
@@ -31,12 +33,15 @@ app.listen(PORT, () => {
 
 app.use(cors());
 app.use(express.json());
-
+app.use(express.urlencoded({
+  extended: true
+}));
 
 
 //set up routes
 
 app.use('/api/user', upload.none(), userRouter)
+app.use('/api/post', fileUpload.single('image'), postRouter)
 
 
 
