@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 const multer = require("multer");
 const userRouter = require("./routers/userRouter");
 const postRouter = require("./routers/postRouter");
+const commentRouter = require("./routers/commentRouter");
 const fileUpload = require("./utils/fileUpload");
 
 
@@ -42,6 +43,7 @@ app.use(express.urlencoded({
 
 app.use('/api/user', upload.none(), userRouter)
 app.use('/api/post', fileUpload.single('image'), postRouter)
+app.use('/api/comment', upload.none(), commentRouter)
 
 
 
