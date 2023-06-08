@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const Comment = require("../models/commentModel");
+const User = require("../models/userModel");
 const { verifyToken } = require("./verifyToken");
 
 // add comment
@@ -10,6 +11,7 @@ router.post("/add",verifyToken,  async (req, res) => {
      const commentdone = new Comment({
         postid: req.body.postid,
         commentby: req.user._id,
+        username: req.user.firstname+' '+req.user.lastname,
         comment: req.body.comment,
      });
     const savedComment = await commentdone.save();
@@ -21,6 +23,19 @@ router.post("/add",verifyToken,  async (req, res) => {
     console.log(err);
   }
   
+});
+
+
+//get comment by postid
+router.get("/:id", async (req, res) => {
+  
+  try {
+      const cmt = await Comment.find({ postid: req.params.id })
+      
+      res.status(200).json(cmt)
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 

@@ -1,10 +1,12 @@
+
 const mongoose = require("mongoose");
 
 const commentSchema = new mongoose.Schema(
     {
-    commentby: {type: mongoose.Schema.Types.ObjectId, requred: true, ref: 'User'},
-    postid: {type: mongoose.Schema.Types.ObjectId, requred: true, ref: 'Post'},
+    commentby: {type: mongoose.Types.ObjectId,  ref: 'User'},
+    postid: {type: mongoose.Types.ObjectId, ref: 'Post'},
     
+    username: { type: String },
     comment: { type: String },
     
   },
