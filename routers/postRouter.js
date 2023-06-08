@@ -85,4 +85,112 @@ router.get("/:id", async (req, res) => {
 });
 
 
+// upvote
+router.put("/downvote/:id", verifyToken, async (req, res) => {
+
+    try {
+        const isUpvote =await Post.find({$and:[{_id: req.params.id}, {upvote: {$in: [req.user.id]}}]})
+
+
+    if (!isUpvote.length===0) {
+       return res.status(200).json({message: 'You already give upvote! you have to remove it to give downvote again'});
+    }
+    } catch (err) {
+        res.status(500).json(err);
+    }
+  try {
+     const post= await Post.findOneAndUpdate(
+    {
+        _id: req.params.id
+    },
+    [
+        
+         {
+            $set: {
+                downvote: {
+                    $cond: [
+                        { $in: [req.user.id, '$downvote'] },
+                        { $setDifference: ['$downvote', [req.user.id]] },
+                        { $setUnion: ['$downvote', [req.user.id]] }
+                        
+                    ]
+                }
+            }
+        },
+         {
+            $set: {
+                upvote: {
+                    $cond: [
+                        { $in: [req.user.id, '$upvote'] },
+                        { $setDifference: ['$upvote', [req.user.id]] },
+                        '$upvote'
+                    ]
+                }
+            }
+        }
+        
+        ],
+    { new: true }
+);
+ 
+res.status(200).json(post);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+// downvote
+router.put("/upvote/:id", verifyToken, async (req, res) => {
+
+    const isDownvote =await Post.find({$and:[{_id: req.params.id}, {downvote: {$in: [req.user.id]}}]})
+
+
+    if (!isDownvote.length===0) {
+       return res.status(200).json({message: 'You already give downvote! you have to remove it to give upvote again'});
+    }
+    try {
+        const post= await Post.findOneAndUpdate(
+    {
+        _id: req.params.id
+    },
+            [
+    {
+            $set: {
+                upvote: {
+                    $cond: [
+                        { $in: [req.user.id, '$upvote'] },
+                        { $setDifference: ['$upvote', [req.user.id]] },
+                        { $setUnion: ['$upvote', [req.user.id]] }
+                    ]
+                }
+            }
+        },
+        
+        {
+            $set: {
+                downvote: {
+                    $cond: [
+                        { $in: [req.user.id, '$downvote'] },
+                        { $setDifference: ['$downvote', [req.user.id]] },
+                        '$downvote'
+                    ]
+                }
+            }
+        },
+         
+        
+        ],
+    { new: true }
+);
+    
+res.status(200).json(post);
+   
+  } catch (err) {
+    res.status(500).json(err);
+    }
+    
+
+
+});
+
+
 module.exports = router;
