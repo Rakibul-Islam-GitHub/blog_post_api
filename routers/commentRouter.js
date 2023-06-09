@@ -11,7 +11,7 @@ router.post("/add",verifyToken,  async (req, res) => {
      const commentdone = new Comment({
         postid: req.body.postid,
         commentby: req.user._id,
-        username: req.user.firstname+' '+req.user.lastname,
+        username: req.user.name,
         comment: req.body.comment,
      });
     const savedComment = await commentdone.save();

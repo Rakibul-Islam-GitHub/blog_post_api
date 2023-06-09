@@ -7,10 +7,10 @@ const jwt = require("jsonwebtoken");
 //api/user/register
 router.post("/register", async (req, res) => {
   try {
-    const { email, firstname, lastname, password } = req.body;
+    const { email, name, password } = req.body;
 
     //validation
-    if (!email || !firstname || !lastname || !password)
+    if (!email || !name || !password)
       return res
         .status(400)
         .json({ errorMessage: "Please enter all required fields." });
@@ -27,8 +27,7 @@ router.post("/register", async (req, res) => {
 
     const newUser = new User({
       email: req.body.email,
-      firstname: req.body.firstname,
-      lastname: req.body.lastname,
+      name: req.body.name,
       password: CryptoJS.AES.encrypt(
         req.body.password,
         process.env.PW_SECRET
@@ -36,7 +35,7 @@ router.post("/register", async (req, res) => {
     });
     try {
       const savedUser = await newUser.save();
-      res.status(201).json({firstname: savedUser.firstname, lastname: savedUser.lastname, email: savedUser.email});
+      res.status(201).json({name: savedUser.name, email: savedUser.email});
     } catch (err) {
       res.status(500).json(err);
     }
@@ -83,7 +82,7 @@ router.post("/login", async (req, res) => {
     );
 
    
-    res.status(200).json({firstname: user.firstname, lastname: user.lastname, email:user.email, isAdmin: user.isAdmin, token });
+    res.status(200).json({name: user.name, email:user.email, isAdmin: user.isAdmin, token });
   } catch (err) {
     res.status(500).json(err);
   }

@@ -65,7 +65,7 @@ router.post("/add",verifyToken,  async (req, res) => {
 router.get("/", async (req, res) => {
   
   try {
-      const posts = await Post.find()
+      const posts = await Post.find({}).populate('postby')
       res.status(200).json(posts)
   } catch (err) {
     res.status(500).json(err);
