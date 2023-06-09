@@ -2,7 +2,10 @@ const mongoose = require("mongoose");
 
 const postSchema = new mongoose.Schema(
     {
-    postby: {type: mongoose.Schema.Types.ObjectId, requred: true, ref: 'User'},
+    postby: {
+      type: mongoose.Schema.Types.ObjectId, 
+      required: true, 
+      ref: 'User'},
     title: { type: String,  },
     description: { type: String },
     image: { type: String },
@@ -12,6 +15,6 @@ const postSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Post = mongoose.model("post", postSchema);
+const Post = mongoose.model("Post", postSchema);
 
 module.exports = Post;
