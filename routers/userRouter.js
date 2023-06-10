@@ -35,7 +35,7 @@ router.post("/register", async (req, res) => {
     });
     try {
       const savedUser = await newUser.save();
-      res.status(201).json({name: savedUser.name, email: savedUser.email});
+      res.status(200).json({name: savedUser.name, email: savedUser.email});
     } catch (err) {
       res.status(500).json(err);
     }
@@ -67,8 +67,12 @@ router.post("/login", async (req, res) => {
     );
     const originalpassword = hashedPassword.toString(CryptoJS.enc.Utf8);
 
-    originalpassword !== req.body.password &&
+    
+    if (originalpassword !== req.body.password ) {
       res.status(401).json("Oops.. Wrong password!");
+      return
+    }
+     
 
     //jwt token
     const token = jwt.sign(
@@ -82,7 +86,7 @@ router.post("/login", async (req, res) => {
     );
 
    
-    res.status(200).json({name: user.name, email:user.email, isAdmin: user.isAdmin, token });
+    res.status(200).json({id:user._id, name: user.name, email:user.email, isAdmin: user.isAdmin, token });
   } catch (err) {
     res.status(500).json(err);
   }
