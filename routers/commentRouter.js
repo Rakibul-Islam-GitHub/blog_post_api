@@ -26,6 +26,17 @@ router.post("/add",verifyToken,  async (req, res) => {
 });
 
 
+//get all comment 
+router.get("/", async (req, res) => {
+  
+  try {
+      const cmt = await Comment.find({  })
+      
+      res.status(200).json(cmt)
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 //get comment by postid
 router.get("/:id", async (req, res) => {
   
