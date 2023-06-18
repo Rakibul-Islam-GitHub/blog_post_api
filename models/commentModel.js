@@ -8,7 +8,7 @@ const commentSchema = new mongoose.Schema(
     
     username: { type: String },
     comment: { type: String },
-    
+    like: [{ type: String }],
   },
   { timestamps: true }
 );

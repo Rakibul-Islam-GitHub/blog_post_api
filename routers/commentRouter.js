@@ -50,4 +50,46 @@ router.get("/:id", async (req, res) => {
 });
 
 
+router.put("/liketocomment/:id", verifyToken, async (req, res) => {
+
+  const islike =await Comment.find({$and:[{_id: req.params.id}, {like: {$in: [req.user.id]}}]})
+
+  if (islike.length > 0) {
+   
+    const post= await Comment.findOneAndUpdate(
+      {
+          _id: req.params.id
+      },
+      {
+        $pull: { "like": req.user.id }
+      },
+      { new: true }
+    );
+      
+    return res.status(200).json(post);
+    
+  }
+
+ 
+  try {
+      const post= await Comment.findOneAndUpdate(
+  {
+      _id: req.params.id
+  },
+  {
+    $push: { "like": req.user.id }
+  },
+  { new: true }
+);
+  
+res.status(200).json(post);
+ 
+} catch (err) {
+  res.status(500).json(err);
+  }
+  
+
+
+});
+
 module.exports = router;
