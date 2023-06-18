@@ -214,4 +214,21 @@ router.put("/update/:id",verifyToken,  async (req, res) => {
     
 });
 
+
+// delete post
+
+router.delete("/delete/:id",verifyToken,  async (req, res) => {
+
+    try {
+        const deletedone= await Post.findOneAndDelete({_id: req.params.id})
+      
+        if (deletedone) {
+            res.status(200).json({message: 'Post deleted successfully'});
+        }
+    } catch (err) {
+        res.status(500).json(err);
+    }
+    
+});
+
 module.exports = router;
