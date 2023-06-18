@@ -193,4 +193,25 @@ res.status(200).json(post);
 });
 
 
+
+// update post
+
+router.put("/update/:id",verifyToken,  async (req, res) => {
+
+    if (!req.body.description) {
+        return res.json({message: 'Data field missing!'})
+    }
+
+    try {
+        const updatedone= await Post.findOneAndUpdate({_id: req.params.id},{description: req.body.description}, {new:true})
+       
+        if (updatedone) {
+            res.status(200).json(updatedone);
+        }
+    } catch (err) {
+        res.status(500).json(err);
+    }
+    
+});
+
 module.exports = router;
