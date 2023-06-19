@@ -6,6 +6,7 @@ const multer = require("multer");
 const userRouter = require("./routers/userRouter");
 const postRouter = require("./routers/postRouter");
 const commentRouter = require("./routers/commentRouter");
+const replyRouter = require("./routers/replyRouter");
 const fileUpload = require("./utils/fileUpload");
 
 
@@ -20,7 +21,7 @@ app.use(express.json());
 
 //connection to DB
 const uri = process.env.MDB;
-mongoose.set('strictQuery', false);
+// mongoose.set('strictQuery', false);
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 const connection = mongoose.connection;
 connection.once("open", () => {
@@ -44,6 +45,7 @@ app.use(express.urlencoded({
 app.use('/api/user', upload.none(), userRouter)
 app.use('/api/post', fileUpload.single('image'), postRouter)
 app.use('/api/comment', upload.none(), commentRouter)
+app.use('/api/reply', upload.none(), replyRouter)
 
 
 
